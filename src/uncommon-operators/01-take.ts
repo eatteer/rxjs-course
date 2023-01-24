@@ -23,7 +23,6 @@ const interval$ = new Observable<number>((subscriber) => {
 
   let count = 0;
   const intervalId = setInterval(() => {
-    console.log(`push: ${count}`);
     subscriber.next(count++);
   }, 1000);
 
@@ -36,7 +35,10 @@ const interval$ = new Observable<number>((subscriber) => {
     console.log("Stop observable execution");
     clearInterval(intervalId);
   };
-});
+}).pipe(
+  tap((value) => console.log(`tap: ${value}`)),
+  take(3)
+);
 
 const subject$ = new Subject<number>();
 const subscriptionConnect = interval$.subscribe(subject$);
@@ -44,6 +46,16 @@ const subscriptionConnect = interval$.subscribe(subject$);
 const subscription1 = subject$.subscribe(observer1);
 const subscription2 = subject$.subscribe(observer2);
 
-setTimeout(() => {
-  subscriptionConnect.unsubscribe();
-}, 2000);
+// setTimeout(() => {
+//   // console.log("unsubscribe subscription connect");
+//   // subscriptionConnect.unsubscribe();
+
+//   // console.log("unsubscribe subscription 1");
+//   // subscription1.unsubscribe();
+//   // console.log("unsubscribe subscription 2");
+//   // subscription2.unsubscribe();
+
+//   // Source observable keeps pushing data
+//   console.log("complete subject");
+//   subject$.complete();
+// }, 2000);

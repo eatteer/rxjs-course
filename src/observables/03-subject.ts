@@ -1,8 +1,10 @@
 import { Observer, Observable, Subject } from "rxjs";
 
 /**
- * An shared observable execution can be stopped by calling:
- * 1. subscriber.complete().
+ * An multicast observable execution can be stopped by calling:
+ * 1. subscritionConnect.complete().
+ *
+ * subscriptionConnect come from observable$.subscribe(subject$)
  */
 
 /**
@@ -16,6 +18,7 @@ const observer: Observer<number> = {
   complete: () => console.log(`On complete`),
 };
 
+// Source of data
 const interval$ = new Observable<number>((subscriber) => {
   console.log("Start observable execution");
 
@@ -25,6 +28,11 @@ const interval$ = new Observable<number>((subscriber) => {
     subscriber.next(number);
   }, 1000);
 
+  // setTimeout(() => {
+  //   console.log("Complete observable execution");
+  //   subscriber.complete();
+  // }, 2000);
+
   // Callback to be called when the shared observable execution will be stopped.
   return () => {
     console.log(`Stop observable execution`);
@@ -32,19 +40,27 @@ const interval$ = new Observable<number>((subscriber) => {
   };
 });
 
-// Make a shared observable execution
+// Make a multicast observable
+// by subscribing subject to the observable.
 const subject$ = new Subject<number>();
-interval$.subscribe(subject$);
+const subscriptionConnect = interval$.subscribe(subject$);
 
 const subscription1 = subject$.subscribe(observer);
 const subscription2 = subject$.subscribe(observer);
 
 setTimeout(() => {
-  console.log("Unsubscribe observer 1");
-  subscription1.unsubscribe();
+  console.log("Complete subject");
+
+  // Tell the observers to complete and unsubscribe.
+  subject$.complete();
 }, 5000);
 
-setTimeout(() => {
-  console.log("Unsubscribe observer 2");
-  subscription2.unsubscribe();
-}, 10000);
+// setTimeout(() => {
+//   console.log("Unsubscribe observer 1");
+//   subscription1.unsubscribe();
+// }, 5000);
+
+// setTimeout(() => {
+//   console.log("Unsubscribe observer 2");
+//   subscription2.unsubscribe();
+// }, 10000);

@@ -1,7 +1,7 @@
 import { Observer, Observable } from "rxjs";
 
 /**
- * A non-shared observable execution can be stopped either by calling:
+ * A unicast observable execution can be stopped either by calling:
  * 1. subscriber.complete().
  * 2. subscription.unsubscribe().
  *
@@ -33,7 +33,7 @@ const interval$ = new Observable<number>((subscriber) => {
 
   // setTimeout(() => {
   //   console.log(`Complete observable execution`);
-  //   // Tell the particular observer to unsubscribe.
+  //   // Tell the particular observer to completa and unsubscribe.
   //   subscriber.complete();
   // }, 3000);
 
