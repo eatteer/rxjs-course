@@ -1,11 +1,11 @@
 import { Observable, Subject } from "rxjs";
 
 /**
- * Call subject.complete() does not complete the observable execution,
- * since the subject is just an intermediate observer.
+ * In MULTICAST observables the observable execution is stopped by calling
+ * subscriber.complete() or subjectSubscription.unsubscribe().
  *
- * The only known way to stop the observable execution is calling
- * subscriber.complete().
+ * So unsubscribing the observers does not stop the observable execution, since the
+ * the 1 to 1 relationship is between the observable and the subject.
  */
 
 const intervalMs = 1000;
@@ -35,13 +35,11 @@ const subjectSubscription = interval$.subscribe(subject$);
 console.log("subscribe observer 1 to subject");
 const observerSubscription1 = subject$.subscribe({
   next: (value) => console.log(`observer 1 receive: ${value}`),
-  complete: () => console.log("observer 1 complete"),
 });
 
 console.log("subscribe observer 2 to subject");
 const observerSubscription2 = subject$.subscribe({
   next: (value) => console.log(`observer 2 receive: ${value}`),
-  complete: () => console.log("observer 2 complete"),
 });
 
 setTimeout(() => {
@@ -55,10 +53,6 @@ setTimeout(() => {
 }, 4000);
 
 setTimeout(() => {
-  // Do not complete the observable execution.
-  // The subject is just an intermediate observer
-  // and observers can´t stop the observable execution they are
-  // subscribed to.
-  console.log("complete subject");
-  subject$.complete();
+  console.log("unsubscribe subject");
+  subjectSubscription.unsubscribe();
 }, 6000);

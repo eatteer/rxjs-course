@@ -1,11 +1,13 @@
 import { Observable, Subject } from "rxjs";
 
 /**
- * Call subject.complete() does not complete the observable execution,
- * since the subject is just an intermediate observer.
+ * Call subject$.complete() does not complete the observable execution,
+ * since the subject works as an intermediate observer.
  *
  * The only known way to stop the observable execution is calling
- * subscriber.complete().
+ * subscriber.complete() or the subscription.unsubscribe()
+ * where the subscription is associated subscription of
+ * the direct observer (1 to 1 relationship).
  */
 
 const intervalMs = 1000;
