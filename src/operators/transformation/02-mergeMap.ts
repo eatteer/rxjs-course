@@ -13,7 +13,7 @@ const fetch = (username: string): Observable<GithubUser> =>
  */
 
 of("eatteer", "vikler")
-  .pipe(mergeMap(fetch)) // mergeMap takes the observable and flats it
+  .pipe(mergeMap(fetch)) // mergeMap takes the observable and flattens it
   .subscribe({
     next: console.log,
     complete: () => console.log("on complete"),

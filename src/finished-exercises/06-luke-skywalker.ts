@@ -86,12 +86,8 @@ interface Specie {
     .pipe(
       // Realizar los operadores respectivos aquí
       // NO TOCAR el subscribe ni modificarlo ==
-
-      // MAP OPERATOR CREATES AN OBSERVABLE THAT EMITS A STRING TO THE NEXT OPERATOR
       map<Person, string>((person) => person.species[0]),
-      // MAP OPERATOR CREATES AN OBSERVABLE THAT EMITS AN OBSERVABLE TO THE NEXT OPERATOR
       map<string, Observable<Specie>>((specie) => getRequest<Specie>(specie)),
-      // SWITCH OPERATOR SUBSCRIBES TO THE OBSERVABLE AND FLATTEN IT
       switchAll()
     )
     .subscribe(console.log); // ==

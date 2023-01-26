@@ -1,6 +1,6 @@
 import { ajax } from "rxjs/ajax";
-import { switchMap, map, switchAll } from "rxjs/operators";
-import { zip, of, concatMap, tap, Observable } from "rxjs";
+import { switchMap, map } from "rxjs/operators";
+import { zip, of, concatMap, tap } from "rxjs";
 
 interface Person {
   name: string;
@@ -85,15 +85,11 @@ interface Specie {
   getRequest<Person>(`${SW_API}/people/2/`)
     .pipe(
       // Realizar los operadores respectivos aquí
-      // NO TOCAR el subscribe ni modificarlo ==
 
-      // MAP OPERATOR CREATES AN OBSERVABLE THAT EMITS A STRING TO THE NEXT OPERATOR
-      map<Person, string>((person) => person.species[0]),
-      // MAP OPERATOR CREATES AN OBSERVABLE THAT EMITS AN OBSERVABLE TO THE NEXT OPERATOR
-      map<string, Observable<Specie>>((specie) => getRequest<Specie>(specie)),
-      // SWITCH OPERATOR SUBSCRIBES TO THE OBSERVABLE AND FLATTEN IT
-      switchAll()
+      // NO TOCAR el subscribe ni modificarlo ==
+      map<Person, string>((person) => person["species"][0]),
+      switchMap((value) => getRequest<Specie>(value))
     )
-    .subscribe(console.log); // ==
+    .subscribe((value) => console.log(value.name)); // ==
   // =======================================
 })();
