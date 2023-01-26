@@ -1,9 +1,10 @@
-import { mergeMap, of, Observable } from "rxjs";
+import { mergeMap, Observable, of } from "rxjs";
 import { ajax } from "rxjs/ajax";
 import { GithubUser } from "./interfaces/github-user";
 
-const url = (un: string) => `https://api.github.com/users/${un}`;
-const fetch = (un: string): Observable<GithubUser> => ajax.getJSON(url(un));
+const url = (id: string) => `https://api.github.com/users/${id}`;
+const fetch = (username: string): Observable<GithubUser> =>
+  ajax.getJSON(url(username));
 
 /**
  * Generate an inner observable, subscribe to it,
@@ -11,7 +12,7 @@ const fetch = (un: string): Observable<GithubUser> => ajax.getJSON(url(un));
  * emit it to observer.
  */
 
-of("eatteer")
+of("eatteer", "vikler")
   .pipe(mergeMap(fetch)) // mergeMap takes the observable and flats it
   .subscribe({
     next: console.log,
